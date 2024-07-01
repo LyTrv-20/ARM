@@ -1,0 +1,55 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Assemble",
+            "type": "shell",
+            "command": "arm-linux-gnueabi-as",
+            "args": [
+                "001.asm",
+                "-o",
+                "001.o"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Link",
+            "type": "shell",
+            "command": "arm-none-eabi-ld",
+            "args": [
+                "001.o",
+                "-o",
+                "001.elf"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Disassemble",
+            "type": "shell",
+            "command": "arm-none-eabi-objdump",
+            "args": [
+                "-d",
+                "001.elf"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "shell": {
+                    "executable": "bash",
+                    "args": ["-c"]
+                }
+            }
+        }
+    ]
+}

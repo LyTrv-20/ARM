@@ -1,0 +1,90 @@
+# commenttt
+
+beginning template 
+
+.global _start 
+.section .text
+
+_start:
+
+.section .data
+
+
+
+.global = like public in java
+.start = main ->marks begining of of program's execution
+    --> need .global _start so linker (object file that combine multiple obj files and libs into exe)
+    can locate correct address using _start as starting point
+
+.section .text =>> everything after this is codes 
+
+.section .data =>> unexecutable or data after this
+
+to end = system call
+    -> since user mode process cant stop itself, we need kernel (softward interruption) 
+    to end the process 
+    -> r7 = determins what we do
+    -> r0 -r4 = determins how we do it 
+    ---> linux arm call table to find all services from kernel
+
+    Ex. exit 
+        mov r7, #0x1
+        mov r0, #13
+
+        swi 0 
+
+
+cmd (HAVE TO HAVE WSL IN FRONT)
+have to reactivate binfmt support everytime wsl is start to run 32bit elf 
+-->sudo service binfmt-support start
+
+
+    arm-linux-gnueabi-as 001.asm -o 001.o 
+     -> assembler = arm-linux-gnueabi-as 
+     -> 001.asm = input file of the assembly lang code that we want to assembler
+     -> 001.o = output file of the assembler (object file)
+        ->output file has machine code that can be linked into exe or lib
+
+to see the output obj file -> file <file name>.o
+
+last pass to linker, make elf from obj -> arm-linux-gnueabi-ld -o <desired elf file name>.elf <obj file name>.o
+
+execute elf file -> wsl qemu-arm ./<file name>.elf
+
+to check if code exec successfully:
+    --> wsl ./<file name>.elf
+    --> Write-Output $LASTEXITCODE
+    output = value of r0
+
+
+File descriptors
+0 - stdin (in)
+1 - stdout (out)
+2 - stderr (error)
+
+to get syscall -> reference table
+
+printing Hello, World
+
+.global _start
+.section .text
+
+_start:
+    ; get syscall to write, need 
+    mov r7, #0x4 
+    ; put int for which file descriptor to r0
+    mov r0, #1 
+
+    ; put what to write (data) in r1/ load register 1 the address of the message label
+    ldr r1, =message 
+    
+    ; put length of data in r3
+    mov r2, #13
+
+    mov r7, #0x1
+    mov r0, #65
+    swi 0
+
+.section .data
+    message:
+    .ascii "Hello, World\n" 
